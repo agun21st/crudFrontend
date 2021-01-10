@@ -1,44 +1,29 @@
 <template>
     <div>
-        <!-- Notification -->
-        <v-snackbar
-        v-model="snackbar"
-        :multi-line="multiLine"
-        :color="loginMode"
-      >
-      {{ message }}
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          dark
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+
     </div>
 </template>
 
 <script>
-  import User from '../Helpers/User';
+  import User from "../Helpers/User"
   export default {
-    data: () => ({
-        multiLine: true,
-        snackbar: false,
-        message: '',
-        loginMode: '',
-    }),
     created(){
-        if(User.loggedIn())
-        {
-            User.logout();
-            localStorage.setItem("logoutNow", "logout")
-            this.$router.push({name : 'Login'})
-        }else{
-            this.$router.push({name : 'Login'})
-        }
+  
+      if(User.loggedIn())
+      {
+        User.logout();
+        this.$store.dispatch("deleteCurrentUser")
+        this.$store.dispatch("deleteCurrentFinance")
+        this.$store.dispatch("deleteAllUser")
+        this.$store.dispatch("deleteAllTradeAccount")
+        this.$store.dispatch("deleteRegisterUser")
+        this.$store.dispatch("deleteTradeInfo")
+        this.$store.dispatch("deleteUserTradeAccount")
+        this.$router.push({name : 'Login'}).catch(()=>{})
+        this.$store.commit('updateSnackbar', {show: true, color: 'warning', message: 'You are Logged out Successfully'})
+      }else{
+        this.$router.push({name : 'Login'}).catch(()=>{})
+      }
     },
   }
 </script>

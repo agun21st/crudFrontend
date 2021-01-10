@@ -1,19 +1,24 @@
 <template>
-  <NavComponent/>
+  <div></div>
 </template>
 
 <script>
-import NavComponent from "@/components/NavComponent.vue";
 export default {
   name: "Home",
-  components: {
-    NavComponent
-  },
   data: () => ({
-    
   }),
   created(){
-    this.$router.push({name : 'HomeComponent'}).catch(()=>{})
+    console.log("I am from Home component")
+    if(this.$store.state.userInfo.length == 0){
+      this.$router.push({name : 'Index'}).catch(()=>{})
+    }else{
+      if((this.$store.state.userInfo[0].role == 'Super_Admin') || (this.$store.state.userInfo[0].role == 'Admin'))
+      {
+        this.$router.push({name : 'AdminPanel'}).catch(()=>{})
+      }else{
+        this.$router.push({name : 'UserPanel'}).catch(()=>{})
+      }
+    }
   }
 };
 </script>
